@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Myanmar AI Voice Studio</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,"Noto Sans Myanmar",sans-serif;
+  background:
+    radial-gradient(circle at top left,#35106b 0%,transparent 35%),
+    radial-gradient(circle at bottom right,#073c67 0%,transparent 35%),
+    #070914;
+  color:#fff;
+  min-height:100vh;
+}
+
+.container{
+  width:100%;
+  max-width:850px;
+  margin:auto;
+  padding:22px 15px 40px;
+}
+
+.header{
+  text-align:center;
+  padding:20px 10px;
+}
+
+.logo{
+  font-size:32px;
+  font-weight:800;
+  background:linear-gradient(90deg,#00eaff,#9b5cff,#ff4fd8);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.subtitle{
+  color:#aeb5c9;
+  margin-top:8px;
+  font-size:14px;
+}
+
+.card{
+  background:rgba(15,18,38,.88);
+  border:1px solid rgba(0,234,255,.18);
+  border-radius:22px;
+  padding:20px;
+  margin-top:18px;
+  box-shadow:0 15px 50px rgba(0,0,0,.35);
+}
+
+.label{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-size:14px;
+  color:#cdd3e8;
+}
+
+textarea{
+  width:100%;
+  height:250px;
+  resize:vertical;
+  background:#090c1b;
+  border:1px solid #28304d;
+  border-radius:15px;
+  color:#fff;
+  padding:16px;
+  font-size:17px;
+  line-height:1.8;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#00eaff;
+  box-shadow:0 0 18px rgba(0,234,255,.12);
+}
+
+.counter{
+  color:#00eaff;
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+
+.control{
+  background:#0b0f22;
+  border:1px solid #252d49;
+  border-radius:14px;
+  padding:13px;
+}
+
+.control label{
+  display:block;
+  color:#aeb5c9;
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+select,input[type=range]{
+  width:100%;
+}
+
+select{
+  background:#11162b;
+  color:#fff;
+  border:1px solid #303956;
+  border-radius:10px;
+  padding:11px;
+}
+
+input[type=range]{
+  accent-color:#00eaff;
+}
+
+.range-value{
+  color:#00eaff;
+  font-size:13px;
+  margin-top:6px;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:18px;
+}
+
+button{
+  border:none;
+  border-radius:13px;
+  padding:14px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.generate{
+  background:linear-gradient(90deg,#00d9ff,#7b5cff);
+  color:#fff;
+  box-shadow:0 8px 25px rgba(0,210,255,.22);
+}
+
+.clear{
+  background:#171c31;
+  color:#ddd;
+  border:1px solid #303956;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.status{
+  margin-top:16px;
+  padding:13px;
+  border-radius:12px;
+  background:#0a1020;
+  color:#aeb5c9;
+  text-align:center;
+  min-height:45px;
+}
+
+.player{
+  margin-top:18px;
+  display:none;
+}
+
+audio{
+  width:100%;
+}
+
+.notice{
+  margin-top:18px;
+  padding:13px;
+  border-radius:12px;
+  background:rgba(255,193,7,.07);
+  border:1px solid rgba(255,193,7,.18);
+  color:#d8dbea;
+  font-size:13px;
+  line-height:1.6;
+}
+
+@media(max-width:600px){
+  .controls{
+    grid-template-columns:1fr;
+  }
+
+  .buttons{
+    grid-template-columns:1fr;
+  }
+
+  .logo{
+    font-size:26px;
+  }
+
+  textarea{
+    height:220px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">🇲🇲 Myanmar AI Voice Studio</div>
+    <div class="subtitle">
+      Text → Myanmar Voice • Fast • Simple • Mobile Friendly
+    </div>
+  </div>
+
+  <div class="card">
+
+    <div class="label">
+      <span>📝 Myanmar Text</span>
+      <span class="counter">
+        <span id="count">0</span> / 5000
+      </span>
+    </div>
+
+    <textarea
+      id="text"
+      maxlength="5000"
+      placeholder="မြန်မာစာကို ဒီနေရာမှာ ထည့်ပါ..."></textarea>
+
+    <div class="controls">
+
+      <div class="control">
+        <label>🎙️ Voice</label>
+        <select id="voice">
+          <option value="0">Voice 1 — Natural</option>
+          <option value="1">Voice 2 — Male</option>
+          <option value="2">Voice 3 — Female</option>
+          <option value="3">Voice 4 — Narrator</option>
+          <option value="4">Voice 5 — Deep</option>
+          <option value="5">Voice 6 — Calm</option>
+          <option value="6">Voice 7 — Soft</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label>⚡ Speed</label>
+        <input
+          type="range"
+          id="speed"
+          min="0.5"
+          max="2"
+          step="0.1"
+          value="1">
+        <div class="range-value">
+          <span id="speedValue">1.0</span>x
+        </div>
+      </div>
+
+      <div class="control">
+        <label>🎚️ Pitch</label>
+        <input
+          type="range"
+          id="pitch"
+          min="0"
+          max="2"
+          step="0.1"
+          value="1">
+        <div class="range-value">
+          <span id="pitchValue">1.0</span>
+        </div>
+      </div>
+
+      <div class="control">
+        <label>😊 Style</label>
+        <select id="style">
+          <option>Normal</option>
+          <option>Calm</option>
+          <option>Serious</option>
+          <option>Happy</option>
+          <option>Storytelling</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="buttons">
+      <button class="generate" onclick="generateVoice()">
+        🔊 Generate Voice
+      </button>
+
+      <button class="clear" onclick="clearText()">
+        🗑️ Clear
+      </button>
+    </div>
+
+    <div class="status" id="status">
+      Ready — စာထည့်ပြီး Generate Voice ကိုနှိပ်ပါ
+    </div>
+
+    <div class="player" id="player">
+      <audio id="audio" controls></audio>
+    </div>
+
+    <div class="notice">
+      💡 ဒီ version က ဖုန်း/Browser ရဲ့ Speech Engine ကိုအသုံးပြုပြီး
+      စမ်းသပ်ထားတာပါ။ Myanmar voice availability က သင့်ဖုန်း/Browser
+      မှာရှိတဲ့ voice ပေါ်မူတည်ပါတယ်။
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+const textBox = document.getElementById("text");
+const count = document.getElementById("count");
+const speed = document.getElementById("speed");
+const pitch = document.getElementById("pitch");
+const speedValue = document.getElementById("speedValue");
+const pitchValue = document.getElementById("pitchValue");
+const statusBox = document.getElementById("status");
+
+textBox.addEventListener("input", function(){
+
+  count.textContent = this.value.length;
+
+  if(this.value.length >= 5000){
+    statusBox.textContent =
+      "⚠️ စာလုံး 5000 ပြည့်ပါပြီ";
+  }
+
+});
+
+speed.addEventListener("input",function(){
+  speedValue.textContent = this.value;
+});
+
+pitch.addEventListener("input",function(){
+  pitchValue.textContent = this.value;
+});
+
+
+function generateVoice(){
+
+  const text = textBox.value.trim();
+
+  if(!text){
+    statusBox.textContent =
+      "❌ မြန်မာစာ အရင်ထည့်ပါ";
+    return;
+  }
+
+  if(!("speechSynthesis" in window)){
+    statusBox.textContent =
+      "❌ ဒီ Browser မှာ Speech Synthesis မရပါ";
+    return;
+  }
+
+  speechSynthesis.cancel();
+
+  const utterance =
+    new SpeechSynthesisUtterance(text);
+
+  utterance.lang = "my-MM";
+  utterance.rate = parseFloat(speed.value);
+  utterance.pitch = parseFloat(pitch.value);
+  utterance.volume = 1;
+
+  const voices =
+    speechSynthesis.getVoices();
+
+  const myVoice =
+    voices.find(v =>
+      v.lang &&
+      v.lang.toLowerCase().startsWith("my")
+    );
+
+  if(myVoice){
+    utterance.voice = myVoice;
+    statusBox.textContent =
+      "🔊 Myanmar voice နဲ့ ပြောနေပါပြီ...";
+  }else{
+
+    statusBox.textContent =
+      "⚠️ Myanmar voice မတွေ့သေးပါ။ Browser/ဖုန်းမှာရှိတဲ့ voice ကိုအသုံးပြုပါမယ်။";
+  }
+
+  utterance.onend = function(){
+    statusBox.textContent =
+      "✅ Voice generation ပြီးပါပြီ";
+  };
+
+  utterance.onerror = function(){
+    statusBox.textContent =
+      "❌ Voice generation မအောင်မြင်ပါ။ ထပ်မံစမ်းကြည့်ပါ။";
+  };
+
+  speechSynthesis.speak(utterance);
+}
+
+
+function clearText(){
+
+  speechSynthesis.cancel();
+
+  textBox.value = "";
+  count.textContent = "0";
+
+  statusBox.textContent =
+    "Ready — စာထည့်ပြီး Generate Voice ကိုနှိပ်ပါ";
+}
+
+
+speechSynthesis.onvoiceschanged = function(){
+  speechSynthesis.getVoices();
+};
+
+</script>
+
+</body>
+</html>
